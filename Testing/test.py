@@ -1,33 +1,25 @@
-"""
-From 8/28
+game_over = True
 
-import arcade
+if game_over:
+    print("a is true")
 
-# this is a comment, computer will ignore
-arcade.open_window(800, 600, "window")
-arcade.set_background_color(arcade.color.OLIVE)
-arcade.start_render()
-arcade.finish_render()
-arcade.run()
-"""
+game_over = False
 
-"""
-From 8/31
+a = True
+b = True
 
-number_for_example = 5
-print(number_for_example)
-print("number_for_example")
+if a and b:
+    print("YES")
+else:
+    print("NO")
 
------------
+temperature = input("What is the temperature in Fahrenheit? ")
+temperature = float(temperature)
 
-constant numbers are in upper case
-PI = 3.14159
-SCREEN_WIDTH = 800
-
-
-miles_driven = 294
-gallons = 10.5
-mpg = miles_driven / gallons
-
-print(mpg)
-"""
+if 90 < temperature <= 150:
+    print("It is hot outside")
+elif temperature > 150:
+    print("Get inside! the planet is on fire!!!!!!")
+else:
+    temperature = str(temperature)
+    print("it is " + temperature + " degrees outside. Not too bad!")
