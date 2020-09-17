@@ -172,7 +172,7 @@ You replaced your bloody bandages with new ones
             bandage_age = 0
             batteries += 3
         if friend == 13:
-            print("You hear te scream of one of your friends in the distance.")
+            print("You hear the scream of one of your friends in the distance.")
         if friend == 8:
             print("You notice a pool of blood on the ground. It looks new.")
         if friend == 7 or friend == 4:
