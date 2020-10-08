@@ -1,4 +1,4 @@
-import arcade
+"""import arcade
 
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
@@ -75,12 +75,6 @@ class MyGame(arcade.Window):
         self.fairy.position_x = x
         self.fairy.position_y = y
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        if button == arcade.MOUSE_BUTTON_LEFT:
-            print("Left mouse button pressed at", x, y)
-        elif button == arcade.MOUSE_BUTTON_RIGHT:
-            print("Right mouse button pressed at", x, y)
-
     def update(self, delta_time):
         self.boy.update()
 
@@ -108,4 +102,26 @@ def main():
     arcade.run()
 
 
-main()
+main()"""
+
+# Write your function below:
+def is_list_sorted(list):
+  x = 0
+  for i in range(len(list)-1):
+    if list[i] < list[i+1]:
+      x += 1
+  if x + 1 == len(list):
+    return True
+  return False
+
+# This is some code you can use to test:
+
+# Example 1, should print False
+my_list = [0, 3, -1, 8]
+result = is_list_sorted(my_list)
+print("Example 1:", result)
+
+# Example 2, should print True
+my_list = [-100, -80, 0, 20, 40, 99, 101]
+result = is_list_sorted(my_list)
+print("Example 2:", result)
