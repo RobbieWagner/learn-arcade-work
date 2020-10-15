@@ -13,7 +13,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 # Sounds from Kenny.nl
-bad_sound = arcade.load_sound("impactTin_medium_000.ogg")
+bad_sound = arcade.load_sound("../Lab 09 - Sprites and Walls/impactTin_medium_000.ogg")
 good_sound = arcade.load_sound("impactMining_003.ogg")
 
 
@@ -37,7 +37,6 @@ class Hazard(arcade.Sprite):
 
 
 class MyGame(arcade.Window):
-    """ Our custom Window Class"""
 
     def __init__(self):
         """ Initializer """
@@ -70,7 +69,7 @@ class MyGame(arcade.Window):
         self.score = 0
 
         # Set up the player (image from Kenny.nl)
-        self.player_sprite = arcade.Sprite("character.png", SPRITE_SCALING_PLAYER)
+        self.player_sprite = arcade.Sprite("../Lab 09 - Sprites and Walls/character.png", SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 50
         self.player_list.append(self.player_sprite)
@@ -91,7 +90,7 @@ class MyGame(arcade.Window):
         for i in range(HAZARD_COUNT):
 
             # Create the hazard instance (image from Kenny.nl)
-            hazard = Hazard("hazard.png", SPRITE_SCALING_HAZARD)
+            hazard = Hazard("../Lab 09 - Sprites and Walls/box.png", SPRITE_SCALING_HAZARD)
 
             # Position the hazard
             hazard.center_x = random.randrange(SCREEN_WIDTH)
