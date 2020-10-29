@@ -1,10 +1,6 @@
-"""
-Array Backed Grid version 2
-
-Show how to use a two-dimensional list/array to back the display of a
-grid on-screen.
-"""
+# Add method that uses MOUSE_BUTTON_PRESSED to keep mouse from moving
 import arcade
+import random
 
 # Set how many rows and columns we will have
 ROW_COUNT = 10
@@ -17,6 +13,7 @@ HEIGHT = 20
 # This sets the margin between each cell
 # and on the edges of the screen.
 MARGIN = 5
+MOUSE_BUTTON_PRESSED = False
 
 # Do the math to figure out our screen dimensions
 SCREEN_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN
@@ -78,11 +75,22 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         arcade.start_render()
 
-        self.grid_shape_list.draw()
+        for row in range(ROW_COUNT):
+            for column in range (COLUMN_COUNT):
+
+                if self.grid[row][column] == 0:
+                    color = arcade.color.WHITE
+                else:
+                    color = random.randrange(256), random.randrange(256), random.randrange(256)
+
+                arcade.draw_rectangle_filled((MARGIN + WIDTH) * column + MARGIN + WIDTH // 2,
+                                            (MARGIN + HEIGHT) * row + MARGIN + HEIGHT // 2,
+                                            WIDTH, HEIGHT,
+                                            color)
 
     def on_mouse_press(self, x, y, button, modifiers):
         """ Called when the user presses a mouse button. """
-
+        MOUSE_BUTTON_PRESSED = True
         # Change the x/y screen coordinates to grid coordinates
         column = x // (WIDTH + MARGIN)
         row = y // (HEIGHT + MARGIN)
@@ -99,29 +107,19 @@ class MyGame(arcade.Window):
             else:
                 self.grid[row][column] = 0
 
-            # Flipping of the box under it
-            if row > 0 and self.grid[row-1][column] == 0:
-                self.grid[row-1][column] = 1
-            elif row > 0 and self.grid[row-1][column] == 1:
-                self.grid[row-1][column] = 0
+        self.create_shapes_from_grid()
 
-            # Flipping of the box above it
-            if row < ROW_COUNT - 1 and self.grid[row + 1][column] == 0:
-                self.grid[row + 1][column] = 1
-            elif row < ROW_COUNT - 1 and self.grid[row + 1][column] == 1:
-                self.grid[row + 1][column] = 0
+    def on_mouse_release(self, x, y, button, modifiers):
+        MOUSE_BUTTON_PRESSED = False
+        column = x// (WIDTH + MARGIN)
+        row = y // (HEIGHT + MARGIN)
 
-            # Flipping of the box to the right
-            if column < COLUMN_COUNT - 1 and self.grid[row][column + 1] == 0:
-                self.grid[row][column + 1] = 1
-            elif column < COLUMN_COUNT - 1 and self.grid[row][column + 1] == 1:
-                self.grid[row][column + 1] = 0
+        print(f"Release coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
 
-            # Flipping of the box to the left
-            if column > 0 and self.grid[row][column - 1] == 0:
-                self.grid[row][column - 1] = 1
-            elif column > 0 and self.grid[row][column - 1] == 1:
-                self.grid[row][column - 1] = 0
+        if row < ROW_COUNT and column < COLUMN_COUNT:
+
+            if self.grid[row][column] == 1:
+                self.grid[row][column] = 0
 
         self.create_shapes_from_grid()
 
