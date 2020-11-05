@@ -132,3 +132,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+"""
+Game where you use mouse and keyboard. 
+Move Boy with keyboard, move Fairy with mouse. 
+Fairy can clean the Ick, Boy needs to not touch the Ick.
+"""
