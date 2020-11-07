@@ -24,6 +24,10 @@ MARGIN = 20
 SCREEN_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN + BLANK_SPACE
 SCREEN_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN + BLANK_SPACE
 
+# sounds from kenney.nl
+BUTTON_SOUND = arcade.load_sound("impactMetal_003.ogg")
+RESET_SOUND = arcade.load_sound("forceField_003.ogg")
+
 
 class MyGame(arcade.Window):
     """
@@ -78,10 +82,11 @@ class MyGame(arcade.Window):
         self.grid_shape_list = None
         self.create_shapes_from_grid()
 
-    def on_update(self, delta_time: float):
+    def on_update(self, delta_time: float = .5):
         if self.grid[0][0] == 10:
-            time.sleep(.5)
 
+            time.sleep(.5)
+            
             for row in range(ROW_COUNT):
                 for column in range(COLUMN_COUNT):
                     checking = True
@@ -103,7 +108,7 @@ class MyGame(arcade.Window):
                                     some_value = 0
 
                     self.grid[row][column] = color_value
-
+            arcade.play_sound(RESET_SOUND)
             self.create_shapes_from_grid()
 
     def create_shapes_from_grid(self):
@@ -171,6 +176,7 @@ class MyGame(arcade.Window):
             # checks if they finished the level
             self.clicks += 1
 
+        arcade.play_sound(BUTTON_SOUND)
         self.create_shapes_from_grid()
 
     def on_mouse_release(self, x, y, button, modifiers):
