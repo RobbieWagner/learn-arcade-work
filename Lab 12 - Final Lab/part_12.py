@@ -1,6 +1,7 @@
 import arcade
 import random
 import time
+# import switch_it_up
 
 """
 This code is adapted from the Array-Baked Grids lab
@@ -57,22 +58,19 @@ class MyGame(arcade.Window):
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
                 checking = True
-                some_value = 0
+                count = 0
 
                 # picks a color, and assigns it if it is unique
                 while checking:
                     color_value = random.randrange(9)
-                    print("color", color_value)
                     for checking_row in range(ROW_COUNT):
                         for checking_column in range(COLUMN_COUNT):
                             if self.grid[checking_row][checking_column] != color_value:
-                                some_value += 1
-                                print(some_value)
-                            if some_value == COLUMN_COUNT * ROW_COUNT:
-                                print("color", color_value)
+                                count += 1
+                            if count == COLUMN_COUNT * ROW_COUNT:
                                 checking = False
                             elif checking_row == ROW_COUNT - 1 and checking_column == COLUMN_COUNT - 1:
-                                some_value = 0
+                                count = 0
 
                 self.grid[row][column] = color_value
 
@@ -86,7 +84,7 @@ class MyGame(arcade.Window):
         if self.grid[0][0] == 10:
 
             time.sleep(.5)
-            
+
             for row in range(ROW_COUNT):
                 for column in range(COLUMN_COUNT):
                     checking = True
