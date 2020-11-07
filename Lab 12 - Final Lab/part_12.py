@@ -1,7 +1,6 @@
 import arcade
-import random
 import time
-# import switch_it_up
+import switch_it_up
 
 """
 This code is adapted from the Array-Baked Grids lab
@@ -54,25 +53,7 @@ class MyGame(arcade.Window):
             for column in range(COLUMN_COUNT):
                 self.grid[row].append(10)
 
-        # gives each box a unique color
-        for row in range(ROW_COUNT):
-            for column in range(COLUMN_COUNT):
-                checking = True
-                count = 0
-
-                # picks a color, and assigns it if it is unique
-                while checking:
-                    color_value = random.randrange(9)
-                    for checking_row in range(ROW_COUNT):
-                        for checking_column in range(COLUMN_COUNT):
-                            if self.grid[checking_row][checking_column] != color_value:
-                                count += 1
-                            if count == COLUMN_COUNT * ROW_COUNT:
-                                checking = False
-                            elif checking_row == ROW_COUNT - 1 and checking_column == COLUMN_COUNT - 1:
-                                count = 0
-
-                self.grid[row][column] = color_value
+        switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
         arcade.set_background_color(arcade.color.BLACK)
 
@@ -85,27 +66,8 @@ class MyGame(arcade.Window):
 
             time.sleep(.5)
 
-            for row in range(ROW_COUNT):
-                for column in range(COLUMN_COUNT):
-                    checking = True
-                    some_value = 0
+            switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
-                    # picks a color, and assigns it if it is unique
-                    while checking:
-                        color_value = random.randrange(9)
-                        print("color", color_value)
-                        for checking_row in range(ROW_COUNT):
-                            for checking_column in range(COLUMN_COUNT):
-                                if self.grid[checking_row][checking_column] != color_value:
-                                    some_value += 1
-                                    print(some_value)
-                                if some_value == COLUMN_COUNT * ROW_COUNT:
-                                    print("color", color_value)
-                                    checking = False
-                                elif checking_row == ROW_COUNT - 1 and checking_column == COLUMN_COUNT - 1:
-                                    some_value = 0
-
-                    self.grid[row][column] = color_value
             arcade.play_sound(RESET_SOUND)
             self.create_shapes_from_grid()
 
