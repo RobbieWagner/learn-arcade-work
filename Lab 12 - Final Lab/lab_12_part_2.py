@@ -52,7 +52,7 @@ class MyGame(arcade.Window):
         for row in range(ROW_COUNT):
             self.grid.append([])
             for column in range(COLUMN_COUNT):
-                self.grid[row].append(10)
+                self.grid[row].append([])
 
         switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
@@ -138,7 +138,7 @@ class MyGame(arcade.Window):
             # checks if they finished the level
             self.clicks += 1
             arcade.play_sound(BUTTON_SOUND)
-        elif self.grid[self.row_clicked][self.column_clicked] != 10:
+        else:
             arcade.play_sound(BAD_CLICK_SOUND)
 
         # sound from kenney.nl

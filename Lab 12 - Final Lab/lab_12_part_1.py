@@ -13,15 +13,13 @@ COLUMN_COUNT = 3
 WIDTH = 100
 HEIGHT = 100
 
-BLANK_SPACE = 0
-
 # This sets the margin between each cell
 # and on the edges of the screen.
 MARGIN = 20
 
 # Do the math to figure out our screen dimensions
-SCREEN_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN + BLANK_SPACE
-SCREEN_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN + BLANK_SPACE
+SCREEN_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN
+SCREEN_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
 
 # sounds from kenney.nl
 BUTTON_SOUND = arcade.load_sound("impactMetal_003.ogg")
@@ -51,7 +49,7 @@ class MyGame(arcade.Window):
         for row in range(ROW_COUNT):
             self.grid.append([])
             for column in range(COLUMN_COUNT):
-                self.grid[row].append(10)
+                self.grid[row].append([])
 
         switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
