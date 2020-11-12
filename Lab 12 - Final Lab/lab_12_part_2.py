@@ -1,5 +1,4 @@
 import arcade
-import time
 import switch_it_up
 
 """
@@ -47,7 +46,7 @@ class MyGame(arcade.Window):
         self.column_clicked = 0
         self.return_value = 0
         self.grid = []
-        self.score = 0
+        self.countdown = 0
 
         # initialization of the board
         for row in range(ROW_COUNT):
@@ -63,10 +62,10 @@ class MyGame(arcade.Window):
         self.grid_shape_list = None
         self.create_shapes_from_grid()
 
-    def on_update(self, delta_time: float = .5):
-        if self.grid[0][0] == 10:
-
-            time.sleep(.5)
+    def on_update(self, delta_time):
+        if self.countdown:
+            self.countdown -= 1
+        if self.grid[0][0] == 10 and self.countdown == 0:
 
             switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
@@ -127,10 +126,10 @@ class MyGame(arcade.Window):
         self.column_clicked = int(x // (WIDTH + MARGIN))
         self.row_clicked = int(y // (HEIGHT + MARGIN))
 
-        print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({self.row_clicked}, {self.column_clicked})")
-
         # this assures that nothing happens unless they click somewhere on the grid
-        if self.row_clicked < ROW_COUNT and self.column_clicked < COLUMN_COUNT:
+        if self.row_clicked < ROW_COUNT \
+                and self.column_clicked < COLUMN_COUNT \
+                and self.grid[self.row_clicked][self.column_clicked] != 10:
 
             # Highlight the box they clicked
             self.return_value = self.grid[self.row_clicked][self.column_clicked]
@@ -138,19 +137,17 @@ class MyGame(arcade.Window):
 
             # checks if they finished the level
             self.clicks += 1
-            # sound from kenney.nl
             arcade.play_sound(BUTTON_SOUND)
-        else:
-            # sound from kenny.nl
+        elif self.grid[self.row_clicked][self.column_clicked] != 10:
             arcade.play_sound(BAD_CLICK_SOUND)
 
+        # sound from kenney.nl
         self.create_shapes_from_grid()
 
     def on_mouse_release(self, x, y, button, modifiers):
-
-        print(f"Release coordinates: ({self.row_clicked}, {self.column_clicked})")
-
-        if self.row_clicked < ROW_COUNT and self.column_clicked < COLUMN_COUNT:
+        if self.row_clicked < ROW_COUNT \
+                and self.column_clicked < COLUMN_COUNT \
+                and self.grid[self.row_clicked][self.column_clicked] == 9:
 
             self.grid[self.row_clicked][self.column_clicked] = self.return_value
 
@@ -159,6 +156,7 @@ class MyGame(arcade.Window):
                 for row in range(ROW_COUNT):
                     for column in range(COLUMN_COUNT):
                         self.grid[row][column] = 10
+                self.countdown = 30
                 self.clicks = 0
                 self.required_clicks += 1
 

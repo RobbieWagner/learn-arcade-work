@@ -1,5 +1,4 @@
 import arcade
-import time
 import switch_it_up
 
 """
@@ -46,6 +45,7 @@ class MyGame(arcade.Window):
         self.column_clicked = 0
         self.return_value = 0
         self.grid = []
+        self.countdown = 0
 
         # initialization of the board
         for row in range(ROW_COUNT):
@@ -61,10 +61,10 @@ class MyGame(arcade.Window):
         self.grid_shape_list = None
         self.create_shapes_from_grid()
 
-    def on_update(self, delta_time: float = .5):
-        if self.grid[0][0] == 10:
-
-            time.sleep(.5)
+    def on_update(self, delta_time):
+        if self.countdown:
+            self.countdown -= 1
+        if self.grid[0][0] == 10 and self.countdown == 0:
 
             switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
@@ -154,6 +154,7 @@ class MyGame(arcade.Window):
                 for row in range(ROW_COUNT):
                     for column in range(COLUMN_COUNT):
                         self.grid[row][column] = 10
+                self.countdown = 30
                 self.clicks = 0
                 self.required_clicks += 1
 
