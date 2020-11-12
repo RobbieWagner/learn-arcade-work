@@ -68,6 +68,7 @@ class MyGame(arcade.Window):
 
             switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
+            # sound from kenney.nl
             arcade.play_sound(RESET_SOUND)
             self.create_shapes_from_grid()
 
@@ -136,6 +137,7 @@ class MyGame(arcade.Window):
             # checks if they finished the level
             self.clicks += 1
 
+        # sound from kenney.nl
         arcade.play_sound(BUTTON_SOUND)
         self.create_shapes_from_grid()
 
