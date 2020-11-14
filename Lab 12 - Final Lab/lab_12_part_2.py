@@ -1,5 +1,6 @@
 import arcade
 import switch_it_up
+import random
 
 """
 This code is adapted from the Array-Baked Grids lab
@@ -48,6 +49,13 @@ class MyGame(arcade.Window):
         self.grid = []
         self.countdown = 0
 
+        self.all_flashed = False
+        self.flash_number = 0
+        self.flash_array = []
+        self.flash_requirement = 1
+        self.flashing = False
+        self.started = False
+
         # initialization of the board
         for row in range(ROW_COUNT):
             self.grid.append([])
@@ -71,6 +79,35 @@ class MyGame(arcade.Window):
 
             # sound from kenney.nl
             arcade.play_sound(RESET_SOUND)
+            self.create_shapes_from_grid()
+
+            # checks to see if lights still need to flash
+        elif self.countdown == 0 and self.all_flashed == False:
+            flash_value = random.randrange(9)
+            self.flash_number += 1
+
+            # finds which color to flash and flashes it
+            for row in range(ROW_COUNT):
+                for column in range(COLUMN_COUNT):
+                    if flash_value == self.grid[row][column]:
+                        return_value = self.grid[row][column]
+                        self.grid[row][column] = 10
+                        self.flashing = True
+
+            self.create_shapes_from_grid()
+
+            # checks to see if all the squares that needed to flash did
+        if self.flash_number == self.flash_requirement:
+            self.flash_number = 0
+            self.flash_requirement += 1
+            self.all_flashed = True
+
+        if self.flashing:
+            for row in range(ROW_COUNT):
+                for column in range(COLUMN_COUNT):
+                    if self.grid[row][column] == 10:
+                        self.grid[row][column] = return_value
+            self.flashing = False
             self.create_shapes_from_grid()
 
     def create_shapes_from_grid(self):
