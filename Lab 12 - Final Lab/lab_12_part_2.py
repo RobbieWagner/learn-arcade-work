@@ -71,44 +71,51 @@ class MyGame(arcade.Window):
         self.create_shapes_from_grid()
 
     def on_update(self, delta_time):
-        if self.countdown:
-            self.countdown -= 1
-        if self.grid[0][0] == 10 and self.countdown == 0:
+        if self.started:
 
-            switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
+            if self.countdown:
+                self.countdown -= 1
 
-            # sound from kenney.nl
-            arcade.play_sound(RESET_SOUND)
-            self.create_shapes_from_grid()
+            if self.grid[0][0] == 10 and self.countdown == 0:
 
-            # checks to see if lights still need to flash
-        elif self.countdown == 0 and self.all_flashed == False:
-            flash_value = random.randrange(9)
-            self.flash_number += 1
+                switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
 
-            # finds which color to flash and flashes it
-            for row in range(ROW_COUNT):
-                for column in range(COLUMN_COUNT):
-                    if flash_value == self.grid[row][column]:
-                        return_value = self.grid[row][column]
-                        self.grid[row][column] = 10
-                        self.flashing = True
+                # sound from kenney.nl
+                arcade.play_sound(RESET_SOUND)
+                self.countdown = 30
+                self.create_shapes_from_grid()
 
-            self.create_shapes_from_grid()
+                # checks to see if lights still need to flash
+            elif self.countdown == 0 and self.all_flashed == False:
+                flash_value = random.randrange(9)
+                self.flash_number += 1
 
-            # checks to see if all the squares that needed to flash did
-        if self.flash_number == self.flash_requirement:
-            self.flash_number = 0
-            self.flash_requirement += 1
-            self.all_flashed = True
+                # finds which color to flash and flashes it
+                for row in range(ROW_COUNT):
+                    for column in range(COLUMN_COUNT):
+                        if flash_value == self.grid[row][column]:
+                            self.return_value = self.grid[row][column]
+                            self.grid[row][column] = 10
+                            self.flashing = True
 
-        if self.flashing:
-            for row in range(ROW_COUNT):
-                for column in range(COLUMN_COUNT):
-                    if self.grid[row][column] == 10:
-                        self.grid[row][column] = return_value
-            self.flashing = False
-            self.create_shapes_from_grid()
+                self.countdown = 30
+
+                self.create_shapes_from_grid()
+
+                # checks to see if all the squares that needed to flash did
+            if self.flash_number == self.flash_requirement:
+                self.flash_number = 0
+                self.flash_requirement += 1
+                self.all_flashed = True
+
+            if self.flashing and self.countdown == 1:
+                for row in range(ROW_COUNT):
+                    for column in range(COLUMN_COUNT):
+                        if self.grid[row][column] == 10:
+                            self.grid[row][column] = self.return_value
+                self.flashing = False
+                self.countdown = 30
+                self.create_shapes_from_grid()
 
     def create_shapes_from_grid(self):
         self.grid_shape_list = arcade.ShapeElementList()
@@ -150,54 +157,62 @@ class MyGame(arcade.Window):
                 self.grid_shape_list.append(rectangle)
 
     def on_draw(self):
-        """ Render the screen. """
+        if self.started:
+            """ Render the screen. """
 
-        # This command has to happen before we start drawing
-        arcade.start_render()
+            # This command has to happen before we start drawing
+            arcade.start_render()
 
-        self.grid_shape_list.draw()
+            self.grid_shape_list.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        """ Called when the user presses a mouse button. """
-        # Change the x/y screen coordinates to grid coordinates
-        self.column_clicked = int(x // (WIDTH + MARGIN))
-        self.row_clicked = int(y // (HEIGHT + MARGIN))
+        if self.started:
+            """ Called when the user presses a mouse button. """
+            # Change the x/y screen coordinates to grid coordinates
+            self.column_clicked = int(x // (WIDTH + MARGIN))
+            self.row_clicked = int(y // (HEIGHT + MARGIN))
 
-        # this assures that nothing happens unless they click somewhere on the grid
-        if self.row_clicked < ROW_COUNT \
-                and self.column_clicked < COLUMN_COUNT \
-                and self.grid[self.row_clicked][self.column_clicked] != 10:
+            # this assures that nothing happens unless they click somewhere on the grid
+            if self.row_clicked < ROW_COUNT \
+                    and self.column_clicked < COLUMN_COUNT \
+                    and self.grid[self.row_clicked][self.column_clicked] != 10:
 
-            # Highlight the box they clicked
-            self.return_value = self.grid[self.row_clicked][self.column_clicked]
-            self.grid[self.row_clicked][self.column_clicked] = 9
+                # Highlight the box they clicked
+                self.return_value = self.grid[self.row_clicked][self.column_clicked]
+                self.grid[self.row_clicked][self.column_clicked] = 9
 
-            # checks if they finished the level
-            self.clicks += 1
-            arcade.play_sound(BUTTON_SOUND)
-        else:
-            arcade.play_sound(BAD_CLICK_SOUND)
+                # checks if they finished the level
+                self.clicks += 1
+                arcade.play_sound(BUTTON_SOUND)
+            else:
+                arcade.play_sound(BAD_CLICK_SOUND)
 
-        # sound from kenney.nl
-        self.create_shapes_from_grid()
+            # sound from kenney.nl
+            self.create_shapes_from_grid()
 
     def on_mouse_release(self, x, y, button, modifiers):
-        if self.row_clicked < ROW_COUNT \
-                and self.column_clicked < COLUMN_COUNT \
-                and self.grid[self.row_clicked][self.column_clicked] == 9:
+        if self.started:
+            if self.row_clicked < ROW_COUNT \
+                    and self.column_clicked < COLUMN_COUNT \
+                    and self.grid[self.row_clicked][self.column_clicked] == 9:
 
-            self.grid[self.row_clicked][self.column_clicked] = self.return_value
+                self.grid[self.row_clicked][self.column_clicked] = self.return_value
 
-            # turns the grid to white and
-            if self.clicks == self.required_clicks:
-                for row in range(ROW_COUNT):
-                    for column in range(COLUMN_COUNT):
-                        self.grid[row][column] = 10
-                self.countdown = 30
-                self.clicks = 0
-                self.required_clicks += 1
+                # turns the grid to white and
+                if self.clicks == self.required_clicks:
+                    for row in range(ROW_COUNT):
+                        for column in range(COLUMN_COUNT):
+                            self.grid[row][column] = 10
+                    self.countdown = 30
+                    self.clicks = 0
+                    self.required_clicks += 1
 
-        self.create_shapes_from_grid()
+            self.create_shapes_from_grid()
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.SPACE:
+            self.started = True
+            self.countdown = 30
 
 
 def main():
