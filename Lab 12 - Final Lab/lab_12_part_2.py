@@ -50,10 +50,11 @@ class MyGame(arcade.Window):
         self.countdown = 0
 
         self.all_flashed = False
-        self.flash_number = 0
+        self.flash_count = 0
         self.flash_array = []
         self.flash_requirement = 1
         self.flashing = False
+
         self.started = False
 
         # initialization of the board
@@ -63,6 +64,7 @@ class MyGame(arcade.Window):
                 self.grid[row].append([])
 
         switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
+        self.board_reset = True
 
         arcade.set_background_color(arcade.color.BLACK)
 
@@ -76,42 +78,49 @@ class MyGame(arcade.Window):
             if self.countdown:
                 self.countdown -= 1
 
+            if self.all_flashed and self.board_reset:
+                self.all_flashed = False
+                self.board_reset = False
+
             if self.grid[0][0] == 10 and self.countdown == 0:
 
                 switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
+                self.board_reset = True
 
                 # sound from kenney.nl
                 arcade.play_sound(RESET_SOUND)
+
                 self.countdown = 30
                 self.create_shapes_from_grid()
 
                 # checks to see if lights still need to flash
-            elif self.countdown == 0 and self.all_flashed == False:
+            elif self.countdown == 0 and self.all_flashed == False and self.board_reset:
                 flash_value = random.randrange(9)
-                self.flash_number += 1
+                self.flash_count += 1
 
                 # finds which color to flash and flashes it
                 for row in range(ROW_COUNT):
                     for column in range(COLUMN_COUNT):
                         if flash_value == self.grid[row][column]:
                             self.return_value = self.grid[row][column]
-                            self.grid[row][column] = 10
+                            self.grid[row][column] = 9
                             self.flashing = True
 
+                # checks to see if all the squares that needed to flash did
+                if self.flash_count == self.flash_requirement:
+                    self.flash_count = 0
+                    self.flash_requirement += 1
+                    self.all_flashed = True
+
+                # need to reset countdown everytime
                 self.countdown = 30
 
                 self.create_shapes_from_grid()
 
-                # checks to see if all the squares that needed to flash did
-            if self.flash_number == self.flash_requirement:
-                self.flash_number = 0
-                self.flash_requirement += 1
-                self.all_flashed = True
-
             if self.flashing and self.countdown == 1:
                 for row in range(ROW_COUNT):
                     for column in range(COLUMN_COUNT):
-                        if self.grid[row][column] == 10:
+                        if self.grid[row][column] == 9:
                             self.grid[row][column] = self.return_value
                 self.flashing = False
                 self.countdown = 30
