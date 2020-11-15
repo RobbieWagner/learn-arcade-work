@@ -1,7 +1,16 @@
 import random
 
 
-def reset_the_board(grid, rows, columns,):
+def reset_the_board(grid, rows, columns, full_array1, full_array2):
+    # strips the board
+    grid *= 0
+
+    # recreates an empty board
+    for row in range(rows):
+        grid.append([])
+        for column in range(columns):
+            grid[row].append([])
+
     # gives each box a unique color
     for row in range(rows):
         for column in range(columns):
@@ -21,3 +30,6 @@ def reset_the_board(grid, rows, columns,):
                             some_value = 0
 
             grid[row][column] = color_value
+
+    full_array1 *= 0
+    full_array2 *= 0

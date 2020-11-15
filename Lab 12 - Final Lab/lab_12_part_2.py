@@ -41,12 +41,17 @@ class MyGame(arcade.Window):
         """
         super().__init__(width, height)
 
+        self.grid = []
+
         self.clicks = 0
         self.required_clicks = 1
+        self.goal_tracker = 0
         self.row_clicked = 0
         self.column_clicked = 0
+        self.clicker_array = []
+
         self.return_value = 0
-        self.grid = []
+
         self.countdown = 0
 
         self.all_flashed = False
@@ -54,16 +59,12 @@ class MyGame(arcade.Window):
         self.flash_array = []
         self.flash_requirement = 1
         self.flashing = False
+        self.dummy_array1 = []
+        self.dummy_array2 = []
 
         self.started = False
 
-        # initialization of the board
-        for row in range(ROW_COUNT):
-            self.grid.append([])
-            for column in range(COLUMN_COUNT):
-                self.grid[row].append([])
-
-        switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
+        switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT, self.flash_array, self.clicker_array)
         self.board_reset = True
 
         arcade.set_background_color(arcade.color.BLACK)
@@ -78,13 +79,17 @@ class MyGame(arcade.Window):
             if self.countdown:
                 self.countdown -= 1
 
-            if self.all_flashed and self.board_reset:
+            if self.all_flashed and self.board_reset and self.countdown == 1:
                 self.all_flashed = False
                 self.board_reset = False
+                switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT, self.dummy_array1, self.dummy_array2)
+
+                self.countdown = 30
+                self.create_shapes_from_grid()
 
             if self.grid[0][0] == 10 and self.countdown == 0:
 
-                switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT)
+                switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT, self.flash_array, self.clicker_array)
                 self.board_reset = True
 
                 # sound from kenney.nl
@@ -96,6 +101,7 @@ class MyGame(arcade.Window):
                 # checks to see if lights still need to flash
             elif self.countdown == 0 and self.all_flashed == False and self.board_reset:
                 flash_value = random.randrange(9)
+                self.flash_array.append(flash_value)
                 self.flash_count += 1
 
                 # finds which color to flash and flashes it
@@ -117,7 +123,7 @@ class MyGame(arcade.Window):
 
                 self.create_shapes_from_grid()
 
-            if self.flashing and self.countdown == 1:
+            if self.flashing and self.countdown == 2:
                 for row in range(ROW_COUNT):
                     for column in range(COLUMN_COUNT):
                         if self.grid[row][column] == 9:
@@ -156,6 +162,8 @@ class MyGame(arcade.Window):
                     color = arcade.color.GREEN
                 elif self.grid[row][column] == 10:
                     color = arcade.color.WHITE
+                else:
+                    color = arcade.color.BLACK
 
                 # Figure where to put the box
                 x = (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
@@ -186,6 +194,8 @@ class MyGame(arcade.Window):
                     and self.column_clicked < COLUMN_COUNT \
                     and self.grid[self.row_clicked][self.column_clicked] != 10:
 
+                self.clicker_array.append(self.grid[self.row_clicked][self.column_clicked])
+
                 # Highlight the box they clicked
                 self.return_value = self.grid[self.row_clicked][self.column_clicked]
                 self.grid[self.row_clicked][self.column_clicked] = 9
@@ -209,12 +219,21 @@ class MyGame(arcade.Window):
 
                 # turns the grid to white and
                 if self.clicks == self.required_clicks:
-                    for row in range(ROW_COUNT):
-                        for column in range(COLUMN_COUNT):
-                            self.grid[row][column] = 10
-                    self.countdown = 30
-                    self.clicks = 0
-                    self.required_clicks += 1
+                    for i in range(self.clicks):
+                        if self.flash_array[i] == self.clicker_array[i]:
+                            self.goal_tracker += 1
+                    if self.goal_tracker == self.required_clicks:
+                        for row in range(ROW_COUNT):
+                            for column in range(COLUMN_COUNT):
+                                self.grid[row][column] = 10
+                        self.countdown = 30
+                        self.clicks = 0
+                        self.required_clicks += 1
+                        self.goal_tracker = 0
+                    else:
+                        for row in range(ROW_COUNT):
+                            for column in range(COLUMN_COUNT):
+                                self.grid[row][column] = 11
 
             self.create_shapes_from_grid()
 
