@@ -50,6 +50,8 @@ class MyGame(arcade.Window):
         self.column_clicked = 0
         self.clicker_array = []
 
+        self.score = 0
+
         self.return_value = 0
 
         self.countdown = 0
@@ -80,7 +82,6 @@ class MyGame(arcade.Window):
                 self.countdown -= 1
 
             if self.all_flashed and self.board_reset and self.countdown == 1:
-                self.all_flashed = False
                 self.board_reset = False
                 switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT, self.dummy_array1, self.dummy_array2)
 
@@ -91,6 +92,8 @@ class MyGame(arcade.Window):
 
                 switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT, self.flash_array, self.clicker_array)
                 self.board_reset = True
+                self.score += 1
+                self.all_flashed = False
 
                 # sound from kenney.nl
                 arcade.play_sound(RESET_SOUND)
@@ -103,6 +106,7 @@ class MyGame(arcade.Window):
                 flash_value = random.randrange(9)
                 self.flash_array.append(flash_value)
                 self.flash_count += 1
+                self.countdown = 30
 
                 # finds which color to flash and flashes it
                 for row in range(ROW_COUNT):
@@ -117,13 +121,13 @@ class MyGame(arcade.Window):
                     self.flash_count = 0
                     self.flash_requirement += 1
                     self.all_flashed = True
+                    self.countdown = 30
 
                 # need to reset countdown everytime
-                self.countdown = 30
 
                 self.create_shapes_from_grid()
 
-            if self.flashing and self.countdown == 2:
+            if self.flashing and self.countdown == 3:
                 for row in range(ROW_COUNT):
                     for column in range(COLUMN_COUNT):
                         if self.grid[row][column] == 9:
@@ -163,7 +167,7 @@ class MyGame(arcade.Window):
                 elif self.grid[row][column] == 10:
                     color = arcade.color.WHITE
                 else:
-                    color = arcade.color.BLACK
+                    color = arcade.color.RED
 
                 # Figure where to put the box
                 x = (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
@@ -182,6 +186,8 @@ class MyGame(arcade.Window):
 
             self.grid_shape_list.draw()
 
+            arcade.draw_text(f"Score: {self.score}", MARGIN, (HEIGHT + MARGIN) * ROW_COUNT + BLANK_SPACE / 2, arcade.color.WHITE)
+
     def on_mouse_press(self, x, y, button, modifiers):
         if self.started:
             """ Called when the user presses a mouse button. """
@@ -192,7 +198,8 @@ class MyGame(arcade.Window):
             # this assures that nothing happens unless they click somewhere on the grid
             if self.row_clicked < ROW_COUNT \
                     and self.column_clicked < COLUMN_COUNT \
-                    and self.grid[self.row_clicked][self.column_clicked] != 10:
+                    and self.grid[self.row_clicked][self.column_clicked] < 10 \
+                    and self.all_flashed:
 
                 self.clicker_array.append(self.grid[self.row_clicked][self.column_clicked])
 
