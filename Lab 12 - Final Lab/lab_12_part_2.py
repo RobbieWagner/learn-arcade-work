@@ -186,7 +186,10 @@ class MyGame(arcade.Window):
 
             self.grid_shape_list.draw()
 
-            arcade.draw_text(f"Score: {self.score}", MARGIN, (HEIGHT + MARGIN) * ROW_COUNT + BLANK_SPACE / 2, arcade.color.WHITE)
+            arcade.draw_text(f"Score: {self.score}",
+                             MARGIN,
+                             (HEIGHT + MARGIN) * ROW_COUNT + BLANK_SPACE / 2,
+                             arcade.color.WHITE)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.started:
