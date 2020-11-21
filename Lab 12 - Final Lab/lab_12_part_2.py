@@ -1,10 +1,12 @@
+"""
+Color Switch Simon
+This code is adapted from the Array-Backed Grids lab
+"""
+
 import arcade
 import switch_it_up
 import random
 
-"""
-This code is adapted from the Array-Baked Grids lab
-"""
 
 # Set how many rows and columns we will have
 ROW_COUNT = 3

@@ -1,10 +1,11 @@
+"""
+Color Switch Simon
+This code is adapted from the Array-Backed Grids lab
+"""
+
 import arcade
 import switch_it_up
 import random
-
-"""
-This code is adapted from the Array-Baked Grids lab
-"""
 
 # Set how many rows and columns we will have
 ROW_COUNT = 3
@@ -55,6 +56,7 @@ class MyGame(arcade.Window):
         self.return_value = 0
 
         self.countdown = 0
+        self.countdown_reset_value = 0
 
         self.all_flashed = False
         self.flash_count = 0
@@ -81,13 +83,15 @@ class MyGame(arcade.Window):
             if self.countdown:
                 self.countdown -= 1
 
+            # Shuffles the board once all squares have flashed
             if self.all_flashed and self.board_reset and self.countdown == 1:
                 self.board_reset = False
                 switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT, self.dummy_array1, self.dummy_array2)
 
-                self.countdown = 30
+                self.countdown = self.countdown_reset_value
                 self.create_shapes_from_grid()
 
+            # Resets te board after each round
             if self.grid[0][0] == 10 and self.countdown == 0:
 
                 switch_it_up.reset_the_board(self.grid, ROW_COUNT, COLUMN_COUNT, self.flash_array, self.clicker_array)
@@ -98,15 +102,15 @@ class MyGame(arcade.Window):
                 # sound from kenney.nl
                 arcade.play_sound(RESET_SOUND)
 
-                self.countdown = 30
+                self.countdown = self.countdown_reset_value
                 self.create_shapes_from_grid()
 
-                # checks to see if lights still need to flash
+            # checks to see if lights still need to flash
             elif self.countdown == 0 and self.all_flashed == False and self.board_reset:
                 flash_value = random.randrange(9)
                 self.flash_array.append(flash_value)
                 self.flash_count += 1
-                self.countdown = 30
+                self.countdown = self.countdown_reset_value
 
                 # finds which color to flash and flashes it
                 for row in range(ROW_COUNT):
@@ -121,7 +125,7 @@ class MyGame(arcade.Window):
                     self.flash_count = 0
                     self.flash_requirement += 1
                     self.all_flashed = True
-                    self.countdown = 30
+                    self.countdown = self.countdown_reset_value
 
                 # need to reset countdown everytime
 
@@ -133,7 +137,7 @@ class MyGame(arcade.Window):
                         if self.grid[row][column] == 9:
                             self.grid[row][column] = self.return_value
                 self.flashing = False
-                self.countdown = 30
+                self.countdown = self.countdown_reset_value
                 self.create_shapes_from_grid()
 
     def create_shapes_from_grid(self):
@@ -190,6 +194,19 @@ class MyGame(arcade.Window):
                              MARGIN,
                              (HEIGHT + MARGIN) * ROW_COUNT + BLANK_SPACE / 2,
                              arcade.color.WHITE)
+        # draws startup screen
+        else:
+            arcade.draw_rectangle_filled(SCREEN_WIDTH / 4 - MARGIN, SCREEN_HEIGHT / 2, HEIGHT, WIDTH,
+                                         arcade.color.GREEN)
+            arcade.draw_text("EASY", SCREEN_WIDTH / 4 - 20 - MARGIN, SCREEN_HEIGHT / 2 + 100, arcade.color.WHITE,
+                             10, 40, "center")
+            arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, HEIGHT, WIDTH, arcade.color.YELLOW)
+            arcade.draw_text("MEDIUM", SCREEN_WIDTH / 2 - MARGIN - 5, SCREEN_HEIGHT / 2 + 100, arcade.color.WHITE, 10,
+                             50, "center")
+            arcade.draw_rectangle_filled(SCREEN_WIDTH * 3 / 4 + MARGIN, SCREEN_HEIGHT / 2, HEIGHT, WIDTH,
+                                         arcade.color.RED)
+            arcade.draw_text("HARD", SCREEN_WIDTH * 3 / 4 - MARGIN + 15, SCREEN_HEIGHT / 2 + 100, arcade.color.WHITE,
+                             10, 40, "center")
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.started:
@@ -218,6 +235,27 @@ class MyGame(arcade.Window):
 
             # sound from kenney.nl
             self.create_shapes_from_grid()
+
+        # only runs at the beginning
+        # checks to see if player has selected a difficulty, then starts game
+        else:
+            if SCREEN_WIDTH / 4 - WIDTH / 2 < int(x) < SCREEN_WIDTH / 4 + WIDTH / 2\
+                    and SCREEN_HEIGHT / 2 - HEIGHT / 2 < int(y) < SCREEN_HEIGHT / 2 + HEIGHT / 2:
+                self.started = True
+                self.countdown_reset_value = 35
+                self.countdown = 35
+
+            if SCREEN_WIDTH / 2 - WIDTH / 2 < int(x) < SCREEN_WIDTH / 2 + WIDTH / 2\
+                    and SCREEN_HEIGHT / 2 - HEIGHT / 2 < int(y) < SCREEN_HEIGHT / 2 + HEIGHT / 2:
+                self.started = True
+                self.countdown_reset_value = 25
+                self.countdown = 25
+
+            if SCREEN_WIDTH * 3 / 4 - WIDTH / 2 < int(x) < SCREEN_WIDTH * 3 / 4 + WIDTH / 2\
+                    and SCREEN_HEIGHT / 2 - HEIGHT / 2 < int(y) < SCREEN_HEIGHT / 2 + HEIGHT / 2:
+                self.started = True
+                self.countdown_reset_value = 15
+                self.countdown = 15
 
     def on_mouse_release(self, x, y, button, modifiers):
         if self.started:
