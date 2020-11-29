@@ -194,6 +194,15 @@ class MyGame(arcade.Window):
                              MARGIN,
                              (HEIGHT + MARGIN) * ROW_COUNT + BLANK_SPACE / 2,
                              arcade.color.WHITE)
+
+            if self.grid[0][0] > 10:
+                arcade.draw_text("GAME OVER", SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT * 3 / 4 + 50,
+                                 arcade.color.RED,
+                                 20, 250, "center")
+            else:
+                arcade.draw_text("COLOR SWAP SIMON", SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT * 3 / 4 + 50, arcade.color.AQUA,
+                             20, 250, "center")
+
         # draws startup screen
         else:
             arcade.draw_rectangle_filled(SCREEN_WIDTH / 4 - MARGIN, SCREEN_HEIGHT / 2, HEIGHT, WIDTH,
@@ -207,6 +216,11 @@ class MyGame(arcade.Window):
                                          arcade.color.RED)
             arcade.draw_text("HARD", SCREEN_WIDTH * 3 / 4 - MARGIN + 15, SCREEN_HEIGHT / 2 + 100, arcade.color.WHITE,
                              10, 40, "center")
+
+            arcade.draw_text("COLOR SWAP SIMON", SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT * 3 / 4 + 50, arcade.color.AQUA,
+                             20, 250, "center")
+            arcade.draw_text("BY ROBBIE", SCREEN_WIDTH / 2 - 49, SCREEN_HEIGHT * 3 / 4 + 30, arcade.color.AQUA,
+                             10, 100, "center")
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.started:
