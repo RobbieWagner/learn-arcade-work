@@ -106,7 +106,7 @@ class MyGame(arcade.Window):
                 self.create_shapes_from_grid()
 
             # checks to see if lights still need to flash
-            elif self.countdown == 0 and self.all_flashed == False and self.board_reset:
+            elif self.countdown == 0 and not self.all_flashed and self.board_reset:
                 flash_value = random.randrange(9)
                 self.flash_array.append(flash_value)
                 self.flash_count += 1
@@ -201,7 +201,7 @@ class MyGame(arcade.Window):
                                  20, 250, "center")
             else:
                 arcade.draw_text("COLOR SWAP SIMON", SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT * 3 / 4 + 50, arcade.color.AQUA,
-                             20, 250, "center")
+                                 20, 250, "center")
 
         # draws startup screen
         else:
